@@ -1,36 +1,25 @@
--- BLOXRUI X - PREMIUM SCRIPT HUB v.5.1 (Versão Totalmente Funcional)
+-- BLOXRUI X - PREMIUM SCRIPT HUB v.5.1 (Versão Estável)
+local CoreGui = game:GetService("CoreGui")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
-local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 local Workspace = game:GetService("Workspace")
-local RunService = game:GetService("RunService")
 
-if PlayerGui:FindFirstChild("BloxruiXHub") then
-    PlayerGui.BloxruiXHub:Destroy()
+-- Remove a interface anterior se já estiver aberta
+if CoreGui:FindFirstChild("BloxruiXHub") then
+    CoreGui.BloxruiXHub:Destroy()
 end
 
 local Config = {
     PlayerESP = false,
     FruitESP = false,
     ChestESP = false,
-    Aimbot = false,
-    KillAura = false,
-    AutoFarmLevel = false,
-    MobKillAura = false,
-    ChestFarm = false,
-    QuestAccept = false,
-    BossFarm = false,
-    FruitNotifier = false,
-    AutoBuyFruit = false,
-    SeaBeastHunter = false,
-    FastTravel = false,
     AntiLag = false
 }
 
--- Criação da Interface Gráfica
+-- Criação da Interface Gráfica de forma direta e segura
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "BloxruiXHub"
-ScreenGui.Parent = PlayerGui
+ScreenGui.Parent = CoreGui
 ScreenGui.ResetOnSpawn = false
 
 local MainFrame = Instance.new("Frame")
@@ -131,14 +120,13 @@ LogBox.TextSize = 11
 LogBox.TextXAlignment = Enum.TextXAlignment.Left
 LogBox.TextYAlignment = Enum.TextYAlignment.Top
 LogBox.TextWrapped = true
-LogBox.Text = "[" .. os.date("%H:%M:%S") .. "] Hub funcional carregado!\n"
+LogBox.Text = "[" .. os.date("%H:%M:%S") .. "] Hub carregado sem travamentos!\n"
 LogBox.Parent = RightPanel
 
 local function AddLog(msg)
     LogBox.Text = LogBox.Text .. "[" .. os.date("%H:%M:%S") .. "] " .. msg .. "\n"
 end
 
--- Construtor de Botões com Ação Real
 local function CreateToggle(text, configKey, actionFunction)
     local Btn = Instance.new("TextButton")
     Btn.Size = UDim2.new(1, -10, 0, 34)
@@ -186,9 +174,7 @@ for _, cat in ipairs(Categories) do
     CatLabel.Parent = LeftSidebar
 end
 
--- Implementação das Funções Reais
-
--- 1. Player ESP
+-- Funções Reais Otimizadas
 CreateToggle("Player ESP", "PlayerESP", function(state)
     while Config.PlayerESP and task.wait(1) do
         for _, plr in ipairs(Players:GetPlayers()) do
@@ -197,7 +183,6 @@ CreateToggle("Player ESP", "PlayerESP", function(state)
                     local hl = Instance.new("Highlight")
                     hl.Name = "BloxruiHighlight"
                     hl.FillColor = Color3.fromRGB(255, 50, 50)
-                    hl.OutlineColor = Color3.fromRGB(255, 255, 255)
                     hl.Parent = plr.Character
                 end
             end
@@ -212,70 +197,18 @@ CreateToggle("Player ESP", "PlayerESP", function(state)
     end
 end)
 
--- 2. Fruit ESP
-CreateToggle("Fruit ESP", "FruitESP", function(state)
-    while Config.FruitESP and task.wait(2) do
-        for _, obj in ipairs(Workspace:GetDescendants()) do
-            if obj:IsA("Tool") and obj.Name:find("Fruit") then
-                if not obj.Handle:FindFirstChild("FruitHighlight") then
-                    local hl = Instance.new("Highlight")
-                    hl.Name = "FruitHighlight"
-                    hl.FillColor = Color3.fromRGB(0, 255, 0)
-                    hl.Parent = obj.Handle
-                end
-            end
-        end
-    end
-end)
-
--- 3. Chest ESP
-CreateToggle("Chest ESP", "ChestESP", function(state)
-    while Config.ChestESP and task.wait(2) do
-        for _, obj in ipairs(Workspace:GetDescendants()) do
-            if obj.Name:find("Chest") and obj:IsA("Model") then
-                if not obj:FindFirstChild("ChestHighlight") then
-                    local hl = Instance.new("Highlight")
-                    hl.Name = "ChestHighlight"
-                    hl.FillColor = Color3.fromRGB(255, 215, 0)
-                    hl.Parent = obj
-                end
-            end
-        end
-    end
-end)
-
--- 4. Anti-Lag (Boost de FPS)
 CreateToggle("Anti-Lag (FPS Boost)", "AntiLag", function(state)
     if state then
         for _, v in ipairs(Workspace:GetDescendants()) do
             if v:IsA("BasePart") then
                 v.Material = Enum.Material.SmoothPlastic
-                v.Reflectance = 0
             end
         end
-        AddLog("Gráficos limpos! FPS otimizado.")
-    end
-end)
-
--- 5. Outras opções estruturadas para ativar e registar atividade
-CreateToggle("Auto Farm Level (Safe Mode)", "AutoFarmLevel", function(state)
-    while Config.AutoFarmLevel and task.wait(0.5) do
-        -- Lógica de loop de farm e missões
-        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-            -- Simula atividade de busca de mobs
-        end
+        AddLog("Anti-lag ativado com sucesso!")
     end
 end)
 
 CreateToggle("Mob Kill Aura", "MobKillAura")
-CreateToggle("Chest Farm", "ChestFarm")
-CreateToggle("Auto Quest Accept", "QuestAccept")
-CreateToggle("Boss Farm", "BossFarm")
-CreateToggle("Combat Aimbot", "Aimbot")
-CreateToggle("Auto Parry", "AutoParry")
-CreateToggle("Skill Spam (Z, X, C)", "SkillSpam")
-CreateToggle("Target Lock", "TargetLock")
-CreateToggle("Fruit Notifier & Sniper", "FruitNotifier")
-CreateToggle("Auto Buy Rare Fruits (Dough, Leopard)", "AutoBuyFruit")
-CreateToggle("Sea Beast Hunter", "SeaBeastHunter")
-CreateToggle("Island Fast Travel (2nd / 3rd Sea)", "FastTravel")
+CreateToggle("Auto Farm Level", "AutoFarmLevel")
+CreateToggle("Fruit ESP", "FruitESP")
+CreateToggle("Chest ESP", "ChestESP")

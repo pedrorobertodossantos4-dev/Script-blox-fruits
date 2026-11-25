@@ -1,7 +1,8 @@
--- BLOXRUI X - PREMIUM SCRIPT HUB v.5.1
+-- BLOXRUI X - PREMIUM SCRIPT HUB v.5.1 (Com Funções Reais)
 local CoreGui = game:GetService("CoreGui")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
+local Workspace = game:GetService("Workspace")
 
 if CoreGui:FindFirstChild("BloxruiXHub") then
     CoreGui.BloxruiXHub:Destroy()
@@ -9,9 +10,7 @@ end
 
 local Config = {
     PlayerESP = false, FruitESP = false, ChestESP = false,
-    Aimbot = false, KillAura = false, AutoParry = false, SkillSpam = false, TargetLock = false,
-    AutoFarmLevel = false, MobKillAura = false, ChestFarm = false, QuestAccept = false, BossFarm = false,
-    FruitNotifier = false, AutoBuyFruit = false, SeaBeastHunter = false, FastTravel = false, AntiLag = false
+    AntiLag = false
 }
 
 local ScreenGui = Instance.new("ScreenGui")
@@ -117,14 +116,15 @@ LogBox.TextSize = 11
 LogBox.TextXAlignment = Enum.TextXAlignment.Left
 LogBox.TextYAlignment = Enum.TextYAlignment.Top
 LogBox.TextWrapped = true
-LogBox.Text = "[" .. os.date("%H:%M:%S") .. "] Bloxrui X Hub carregado...\n"
+LogBox.Text = "[" .. os.date("%H:%M:%S") .. "] Hub carregado com funções reais!\n"
 LogBox.Parent = RightPanel
 
 local function AddLog(msg)
     LogBox.Text = LogBox.Text .. "[" .. os.date("%H:%M:%S") .. "] " .. msg .. "\n"
 end
 
-local function CreateToggle(text, configKey)
+-- Função Toggle com suporte a execução real
+local function CreateToggle(text, configKey, onChanged)
     local Btn = Instance.new("TextButton")
     Btn.Size = UDim2.new(1, -10, 0, 34)
     Btn.BackgroundColor3 = Color3.fromRGB(27, 41, 63)
@@ -150,6 +150,11 @@ local function CreateToggle(text, configKey)
             Btn.BackgroundColor3 = Color3.fromRGB(27, 41, 63)
             AddLog(text .. " desativado.")
         end
+        if onChanged then
+            task.spawn(function()
+                onChanged(Config[configKey])
+            end)
+        end
     end)
 end
 
@@ -166,20 +171,40 @@ for _, cat in ipairs(Categories) do
     CatLabel.Parent = LeftSidebar
 end
 
-CreateToggle("Auto Farm Level (Safe Mode)", "AutoFarmLevel")
+-- Exemplo de Função Real: Player ESP (Adiciona Highlights nos jogadores)
+CreateToggle("Player ESP", "PlayerESP", function(state)
+    for _, plr in ipairs(Players:GetPlayers()) do
+        if plr ~= LocalPlayer and plr.Character then
+            if state then
+                if not plr.Character:FindFirstChild("HighlightESP") then
+                    local hl = Instance.new("Highlight")
+                    hl.Name = "HighlightESP"
+                    hl.FillColor = Color3.fromRGB(255, 0, 0)
+                    hl.OutlineColor = Color3.fromRGB(255, 255, 255)
+                    hl.Parent = plr.Character
+                end
+            else
+                if plr.Character:FindFirstChild("HighlightESP") then
+                    plr.Character.HighlightESP:Destroy()
+                end
+            end
+        end
+    end
+end)
+
+-- Exemplo de Função Real: Anti-Lag (Remove texturas pesadas para ganhar FPS)
+CreateToggle("Anti-Lag (FPS Boost)", "AntiLag", function(state)
+    if state then
+        for _, v in ipairs(Workspace:GetDescendants()) do
+            if v:IsA("BasePart") then
+                v.Material = Enum.Material.SmoothPlastic
+            end
+        end
+        AddLog("Gráficos otimizados com sucesso!")
+    end
+end)
+
 CreateToggle("Mob Kill Aura", "MobKillAura")
-CreateToggle("Chest Farm", "ChestFarm")
-CreateToggle("Auto Quest Accept", "QuestAccept")
-CreateToggle("Boss Farm", "BossFarm")
-CreateToggle("Player ESP", "PlayerESP")
+CreateToggle("Auto Farm Level (Safe Mode)", "AutoFarmLevel")
 CreateToggle("Fruit ESP", "FruitESP")
 CreateToggle("Chest ESP", "ChestESP")
-CreateToggle("Combat Aimbot", "Aimbot")
-CreateToggle("Auto Parry", "AutoParry")
-CreateToggle("Skill Spam (Z, X, C)", "SkillSpam")
-CreateToggle("Target Lock", "TargetLock")
-CreateToggle("Fruit Notifier & Sniper", "FruitNotifier")
-CreateToggle("Auto Buy Rare Fruits (Dough, Leopard)", "AutoBuyFruit")
-CreateToggle("Sea Beast Hunter", "SeaBeastHunter")
-CreateToggle("Island Fast Travel (2nd / 3rd Sea)", "FastTravel")
-CreateToggle("Anti-Lag (FPS Boost)", "AntiLag")

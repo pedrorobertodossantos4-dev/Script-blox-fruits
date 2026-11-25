@@ -1,4 +1,3 @@
--- BLOXRUI X - PREMIUM SCRIPT HUB v.5.1 (Versão Final Otimizada e Funcional)
 local CoreGui = game:GetService("CoreGui")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
